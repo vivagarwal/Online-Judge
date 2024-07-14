@@ -12,6 +12,12 @@ router.post("/api/problems", async (req, res) => {
             return res.status(400).send("Please enter all the information");
         }
 
+        //check if already that problem is being created or not
+        const existingProblem = await Problem.findOne({ name });
+        if (existingProblem) { // problem name already exists
+            res.status(400).send("Problem Name Already Exists, Please change the name");
+        }
+
         const newProblem = new Problem({ name, description, inputs, outputs });
         await newProblem.save();
         res.status(201).json({ message: "You have successfully created the problem!", newProblem });
