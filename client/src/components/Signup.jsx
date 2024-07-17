@@ -25,7 +25,10 @@ function Signup() {
                 const result = response.data;
                 console.log(result);
                 if (result.message === "You have successfully registered!") {
-                    navigate('/login');
+                    if(result.user.role === "admin")
+                        navigate("/problems")
+                    else   
+                        navigate("/homepageuser")
                 } else {
                     // Reset form values if registration fails
                     resetForm();

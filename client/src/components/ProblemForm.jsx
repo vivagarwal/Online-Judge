@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import './css/ProblemForm.css';
 
-const ProblemForm = ({ match, history }) => {
+
+const ProblemForm = ({ history }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [inputs, setInputs] = useState([]);
   const [outputs, setOutputs] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [outputValue, setOutputValue] = useState('');
+  const {id} = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    console.log("Inside useEffect");
-    console.log("match:", match); // Log the entire match object
-    console.log("match.params.id:", match?.params?.id); // Log specifically the id parameter
-    if (match?.params?.id) {
-      axios.get(`http://localhost:8080/api/problems/${match.params.id}`)
+    if (id) {
+      axios.get(`http://localhost:8080/api/problems/${id}`)
         .then(response => {
           const { name, description, inputs, outputs } = response.data;
           setName(name);
@@ -24,22 +28,49 @@ const ProblemForm = ({ match, history }) => {
         })
         .catch(error => console.error('There was an error fetching the problem!', error));
     }
-  }, [match?.params?.id]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const problemData = { name, description, inputs, outputs };
     try {
-      if (match?.params?.id) {
-        await axios.put(`http://localhost:8080/api/problems/${match.params.id}`, problemData);
+      if (id) {
+        await axios.put(`http://localhost:8080/api/problems/${id}`, problemData)
+        .then(response => {
+          const result = response.data;
+          console.log(result);
+          if (result.message === "Problem Updated successfully") {
+              alert(result.message);
+              navigate('/problems');
+          }
+      })
+        navigate('/problems');
       } else {
-        await axios.post('http://localhost:8080/api/problems', problemData);
+        await axios.post('http://localhost:8080/api/problems', problemData)
+        .then(response => {
+          const result = response.data;
+          console.log(result);
+          if (result.message === "You have successfully created the problem!") {
+              alert(result.message);
+              navigate('/problems');
+          }
+      });
       }
       history?.push('/problems');
     } catch (error) {
       console.error(error);
-      alert('Failed to save problem');
+      alert(error);
+      resetForm();
     }
+  };
+
+  const resetForm = () => {
+    setName('');
+    setDescription('');
+    setInputs([]);
+    setOutputs([]);
+    setInputValue('');
+    setOutputValue('');
   };
 
   const handleAddInput = () => {
@@ -52,38 +83,54 @@ const ProblemForm = ({ match, history }) => {
     setOutputValue('');
   };
 
+  const handleDeleteInput = (index) => {
+    const newInputs = inputs.filter((_, i) => i !== index);
+    setInputs(newInputs);
+  };
+
+  const handleDeleteOutput = (index) => {
+    const newOutputs = outputs.filter((_, i) => i !== index);
+    setOutputs(newOutputs);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Problem Name:</label>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-      </div>
-      <div>
-        <label>Problem Description:</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-      </div>
-      <div>
-        <label>Inputs:</label>
-        <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-        <button type="button" onClick={handleAddInput}>Add Input</button>
-        <ul>
-          {inputs.map((input, index) => (
-            <li key={index}>{input}</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <label>Outputs:</label>
-        <input type="text" value={outputValue} onChange={(e) => setOutputValue(e.target.value)} />
-        <button type="button" onClick={handleAddOutput}>Add Output</button>
-        <ul>
-          {outputs.map((output, index) => (
-            <li key={index}>{output}</li>
-          ))}
-        </ul>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form">
+        <div className="form-group">
+          <label>Problem Name:</label>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="form-control" />
+        </div>
+        <div className="form-group">
+          <label>Problem Description:</label>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="form-control" />
+        </div>
+        <div className="form-group">
+          <label>Inputs:</label>
+          <div className="input-group">
+            <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="form-control" />
+            <button type="button" onClick={handleAddInput} className="btn">Add Input</button>
+          </div>
+          <ul className="list">
+            {inputs.map((input, index) => (
+              <li key={index} className="list-item">{input}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="form-group">
+          <label>Outputs:</label>
+          <div className="input-group">
+            <input type="text" value={outputValue} onChange={(e) => setOutputValue(e.target.value)} className="form-control" />
+            <button type="button" onClick={handleAddOutput} className="btn">Add Output</button>
+          </div>
+          <ul className="list">
+            {outputs.map((output, index) => (
+              <li key={index} className="list-item">{output}</li>
+            ))}
+          </ul>
+        </div>
+        <button type="submit" className="btn submit-btn">Submit</button>
+      </form>
+    </div>
   );
 };
 

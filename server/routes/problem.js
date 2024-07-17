@@ -15,7 +15,7 @@ router.post("/api/problems", async (req, res) => {
         //check if already that problem is being created or not
         const existingProblem = await Problem.findOne({ name });
         if (existingProblem) { // problem name already exists
-            res.status(400).send("Problem Name Already Exists, Please change the name");
+            return res.status(400).send("Problem Name Already Exists, Please change the name");
         }
 
         const newProblem = new Problem({ name, description, inputs, outputs });
@@ -53,7 +53,6 @@ router.get("/api/problems/:id", async (req, res) => {
 router.put("/api/problems/:id", async (req, res) => {
     try {
         const { name, description, inputs, outputs } = req.body;
-
         // Check that all the data exists
         if (!name || !description || !inputs || !outputs) {
             return res.status(400).send("Please enter all the information");
@@ -67,7 +66,7 @@ router.put("/api/problems/:id", async (req, res) => {
         if (!updatedProblem) {
             return res.status(404).json({ message: "Problem not found" });
         }
-        res.status(200).json(updatedProblem);
+        res.status(200).json({message : "Problem Updated successfully" , updatedProblem});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

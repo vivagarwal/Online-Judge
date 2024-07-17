@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import './css/ProblemList.css'; // Import the CSS file
 
-const ProblemList = () => {
+const ProblemList1 = () => {
   const [problems, setProblems] = useState([]);
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -13,29 +13,14 @@ const ProblemList = () => {
       .catch(error => console.error('There was an error fetching the problems!', error));
   }, []);
 
-  const handleDelete = (id) => {
-    axios.delete(`http://localhost:8080/api/problems/${id}`)
-      .then(() => {
-        setProblems(problems.filter(problem => problem._id !== id));
-        alert('Problem deleted successfully!'); // Alert on successful deletion
-      })
-      .catch(error => console.error('There was an error deleting the problem!', error));
-  };
-
-  const handleUpdate = (id) => {
-    navigate(`/problems/${id}`); // Use navigate to go to the update form
-  };
-
   return (
     <div className="problem-list-container">
       <h1>Problems</h1>
-      <Link to="/problems/new" className="add-button">Add New Problem</Link>
       <table>
         <thead>
           <tr>
             <th>S.No</th>
             <th>Name</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -43,10 +28,6 @@ const ProblemList = () => {
             <tr key={problem._id}>
               <td>{index + 1}</td>
               <td><Link to={`/problems/view/${problem._id}`}>{problem.name}</Link></td>
-              <td>
-                <button onClick={() => handleDelete(problem._id)} className="delete-button">Delete</button>
-                <button onClick={() => handleUpdate(problem._id)} className="update-button">Update</button>
-              </td>
             </tr>
           ))}
         </tbody>
@@ -55,4 +36,4 @@ const ProblemList = () => {
   );
 };
 
-export default ProblemList;
+export default ProblemList1;

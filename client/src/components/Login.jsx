@@ -25,7 +25,7 @@ function Login() {
         console.log(result);
         if (result.message === "You have successfully logged in!") {
           if(result.role === "admin")
-            navigate("/homepageadmin"); // home page for admin
+            navigate("/problems"); // home page for admin
           else
             navigate("/homepageuser"); //home page for users
         } else {
