@@ -8,6 +8,8 @@ import ProblemForm from "./components/ProblemForm";
 import ProblemList from "./components/ProblemList";
 import ProblemView from "./components/ProblemView";
 import ProblemList1 from "./components/ProblemList1";
+import ProblemDetails from "./components/ProblemDetails";
+
 
 const Home = () => {
   return (
@@ -34,6 +36,7 @@ const App = () => {
           <Route path="/problems" element={<ProblemList />} />
           <Route path="/problems/view/:id" element={<ProblemView />} />
           <Route path="/homepageuser" element={<ProblemList1 />} />
+          <Route path="/problems/submission/:id" element={<ProblemDetails/>}/>
         </Routes>
       </div>
     </div>
