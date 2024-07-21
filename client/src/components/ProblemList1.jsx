@@ -15,7 +15,7 @@ const ProblemList1 = () => {
 
   return (
     <div className="problem-list-container">
-      <h1>Problems</h1>
+      <h1>Problems Set</h1>
       <table>
         <thead>
           <tr>

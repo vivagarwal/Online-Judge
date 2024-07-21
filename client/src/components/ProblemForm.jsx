@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import './css/ProblemForm.css';
 
-
 const ProblemForm = ({ history }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -14,7 +13,6 @@ const ProblemForm = ({ history }) => {
   const [outputValue, setOutputValue] = useState('');
   const {id} = useParams();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (id) {
@@ -43,8 +41,7 @@ const ProblemForm = ({ history }) => {
               alert(result.message);
               navigate('/problems');
           }
-      })
-        navigate('/problems');
+        })
       } else {
         await axios.post('http://localhost:8080/api/problems', problemData)
         .then(response => {
@@ -54,9 +51,8 @@ const ProblemForm = ({ history }) => {
               alert(result.message);
               navigate('/problems');
           }
-      });
+        });
       }
-      history?.push('/problems');
     } catch (error) {
       console.error(error);
       alert(error);
@@ -112,7 +108,10 @@ const ProblemForm = ({ history }) => {
           </div>
           <ul className="list">
             {inputs.map((input, index) => (
-              <li key={index} className="list-item">{input}</li>
+              <li key={index} className="list-item">
+                {input}
+                <button type="button" onClick={() => handleDeleteInput(index)} className="btn delete-btn">Delete</button>
+              </li>
             ))}
           </ul>
         </div>
@@ -124,7 +123,10 @@ const ProblemForm = ({ history }) => {
           </div>
           <ul className="list">
             {outputs.map((output, index) => (
-              <li key={index} className="list-item">{output}</li>
+              <li key={index} className="list-item">
+                {output}
+                <button type="button" onClick={() => handleDeleteOutput(index)} className="btn delete-btn">Delete</button>
+              </li>
             ))}
           </ul>
         </div>
