@@ -5,20 +5,20 @@ const router = express.Router();
 // Create a new problem
 router.post("/api/problems", async (req, res) => {
     try {
-        const { name, description, inputs, outputs } = req.body;
+        const { name, description, inputs, outputs, testCases } = req.body;
 
         // Check that all the data exists
-        if (!name || !description || !inputs || !outputs) {
+        if (!name || !description || !inputs || !outputs || !testCases) {
             return res.status(400).send("Please enter all the information");
         }
 
-        //check if already that problem is being created or not
+        // Check if the problem already exists
         const existingProblem = await Problem.findOne({ name });
-        if (existingProblem) { // problem name already exists
+        if (existingProblem) { // Problem name already exists
             return res.status(400).send("Problem Name Already Exists, Please change the name");
         }
 
-        const newProblem = new Problem({ name, description, inputs, outputs });
+        const newProblem = new Problem({ name, description, inputs, outputs, testCases });
         await newProblem.save();
         res.status(201).json({ message: "You have successfully created the problem!", newProblem });
     } catch (error) {
@@ -52,21 +52,22 @@ router.get("/api/problems/:id", async (req, res) => {
 // Update a problem by id
 router.put("/api/problems/:id", async (req, res) => {
     try {
-        const { name, description, inputs, outputs } = req.body;
+        const { name, description, inputs, outputs, testCases } = req.body;
+        
         // Check that all the data exists
-        if (!name || !description || !inputs || !outputs) {
+        if (!name || !description || !inputs || !outputs || !testCases) {
             return res.status(400).send("Please enter all the information");
         }
 
         const updatedProblem = await Problem.findByIdAndUpdate(
             req.params.id,
-            { name, description, inputs, outputs },
+            { name, description, inputs, outputs, testCases },
             { new: true }
         );
         if (!updatedProblem) {
             return res.status(404).json({ message: "Problem not found" });
         }
-        res.status(200).json({message : "Problem Updated successfully" , updatedProblem});
+        res.status(200).json({ message: "Problem Updated successfully", updatedProblem });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

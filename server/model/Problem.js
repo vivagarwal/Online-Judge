@@ -18,8 +18,11 @@ const problemSchema = new mongoose.Schema({
     outputs:{
         type:[String],
         required:true,
-    }
-
+    },
+    testCases: [{ 
+        input: String, 
+        expectedOutput: String 
+    }], 
 } , {timestamps:true});
 
 module.exports = mongoose.model("problem", problemSchema);
