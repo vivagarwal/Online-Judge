@@ -215,14 +215,14 @@ const ProblemForm = () => {
         <div className="form-group">
           <label>Test Cases:</label>
           <div className="input-group">
-            <input
+            <textarea
               type="text"
               placeholder="Test Case Input"
               value={testCaseInput}
               onChange={(e) => setTestCaseInput(e.target.value)}
               className="form-control"
             />
-            <input
+            <textarea
               type="text"
               placeholder="Expected Output"
               value={testCaseOutput}

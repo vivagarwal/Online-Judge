@@ -22,6 +22,9 @@ const ProblemDetails = () => {
   const [error, setError] = useState(null);
   const [input, setInput] = useState("");
   const editorRef = useRef(null);
+  const [submissionResult, setSubmissionResult] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  
 
   useEffect(() => {
     // Disable spell-checking for the entire component
@@ -77,6 +80,34 @@ const ProblemDetails = () => {
         "Error: " +
           (error.response?.data?.error || "An unexpected error occurred")
       );
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!id) {
+      setOutput('Error: Problem ID is missing.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const compilerResponse = await axios.post('http://localhost:5001/submit', {
+        problemId: id,
+        code,
+        language,
+        testCases: problem.testCases
+      });
+      setSubmissionResult({
+        status: compilerResponse.data.status,
+        message: compilerResponse.data.message
+      });
+    } catch (error) {
+      console.error('Error submitting code:', error);
+      setSubmissionResult({
+        status: 'Runtime Error',
+        message: 'An unexpected error occurred during submission.'
+      });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -167,11 +198,17 @@ const ProblemDetails = () => {
         >
           Run
         </button>
+        <button 
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded"
+            disabled={submitting}
+          >
+            {submitting ? 'Submitting...' : 'Submit'}
+          </button>
 
-        {/* Output box */}
         <div
           className="bg-gray-900 text-black shadow-md p-4 rounded-md mb-4"
-          style={{ height: "500px", overflowY: "auto" }}
+          style={{ height: "100px", overflowY: "auto" }}
         >
           <h2 className="text-lg font-semibold mb-2">Output</h2>
           <div
@@ -183,6 +220,24 @@ const ProblemDetails = () => {
             {output}
           </div>
         </div>
+        
+        {submissionResult && (
+          <div className="mt-4">
+            <h3 className="bg-gray-900 text-black shadow-md p-4 rounded-md mb-4">Submission Result:</h3>
+            <div className={`p-4 rounded ${
+              submissionResult.status === 'Accepted' ? 'bg-green-700' :
+              submissionResult.status === 'Wrong Answer' ? 'bg-red-700' :
+              submissionResult.status === 'Time Limit Exceeded' ? 'bg-yellow-700' :
+              submissionResult.status === 'Runtime Error' ? 'bg-purple-700' :
+              'bg-gray-700'
+            }`}>
+              <p className="font-bold">{submissionResult.status}</p>
+              <p>{submissionResult.message}</p>
+            </div>
+          </div>
+        )}
+
+        
       </div>
     </div>
   );
