@@ -17,7 +17,7 @@ const executeCpp = (filepath, inputFilePath) => {
           ? `g++ "${filepath}" -o "${outPath}" && "${outPath}" < "${inputFilePath}"` 
           : `g++ "${filepath}" -o "${outPath}" && cd "${outDir}" && ./"${jobId}.out" < "${inputFilePath}"`;
 
-          console.log(`Command: ${command}`);
+        console.log(`Command: ${command}`);
         console.log(`Filepath: ${filepath}`);
         console.log(`InputPath: ${inputFilePath}`);
         console.log(`OutPath: ${outPath}`);

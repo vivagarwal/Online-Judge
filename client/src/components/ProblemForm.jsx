@@ -36,6 +36,19 @@ const ProblemForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Final validation check before submitting
+    if (!name || !description || inputs.length === 0 || outputs.length === 0 || testCases.length === 0) {
+      alert("All fields are required, including at least one input, output, and test case.");
+      return;
+  }
+
+  for (const testCase of testCases) {
+      if (!testCase.input || !testCase.expectedOutput) {
+          alert("Each test case must have both input and expected output.");
+          return;
+      }
+  }
     const problemData = { name, description, inputs, outputs, testCases };
     try {
       if (id) {
@@ -44,8 +57,8 @@ const ProblemForm = () => {
           .then((response) => {
             const result = response.data;
             console.log(result);
-            if (result.message === 'Problem Updated successfully') {
-              alert(result.message);
+            alert(result.message);
+            if (result.message === 'Problem updated successfully') {
               navigate('/problems');
             }
           });
@@ -55,8 +68,8 @@ const ProblemForm = () => {
           .then((response) => {
             const result = response.data;
             console.log(result);
+            alert(result.message);
             if (result.message === 'You have successfully created the problem!') {
-              alert(result.message);
               navigate('/problems');
             }
           });
@@ -199,7 +212,6 @@ const ProblemForm = () => {
           </ul>
         </div>
 
-        {/* Test Cases */}
         <div className="form-group">
           <label>Test Cases:</label>
           <div className="input-group">

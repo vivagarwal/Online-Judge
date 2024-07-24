@@ -48,6 +48,62 @@ app.post("/run", async (req, res) => {
     }
 });
 
+app.post("/submit", async (req, res) => {
+    const { language = 'cpp', code, testCases } = req.body;
+    console.log(testCases);
+    if (code === undefined) {
+        return res.status(400).json({ success: false, error: "Empty code!" });
+    }
+    try {
+        const results = [];
+        for (const testCase of testCases) {
+            console.log(testCase);
+            const { filePath, inputFilePath } = await generateFile(language, code, testCase.input);
+            let result;
+            switch (language) {
+                case 'cpp':
+                    result = await executeCpp(filePath, inputFilePath);
+                    break;
+                case 'java':
+                    result = await executeJava(filePath, inputFilePath);
+                    break;
+                case 'py':
+                    result = await executePython(filePath, inputFilePath);
+                    break;
+                case 'c':
+                    result = await executeC(filePath, inputFilePath);
+                    break;
+                default:
+                    return res.status(400).json({ success: false, error: "Unsupported language!" });
+            }
+            results.push({
+                input: testCase.input,
+                expectedOutput: String(testCase.expectedOutput || '').trim().replace(/\s+/g, ''), // Correctly assign expectedOutput
+                actualOutput: String(result.output || '').trim().replace(/\s+/g, ''), // Correctly assign actualOutput
+                passed: String(result.output || '').trim().replace(/\s+/g, '') === String(testCase.expectedOutput || '').trim().replace(/\s+/g, '') // Compare and assign passed
+            });
+            console.log(`Input: "${testCase.input}"`);
+            console.log('Expected:', testCase.expectedOutput);
+            console.log('Actual:', result.output.trim());
+        }
+        const allPassed = results.every(result => result.passed);
+        res.json({ 
+            success: true, 
+            results,
+            status: allPassed ? 'Success' : 'Failed',
+            message: allPassed ? 'All test cases passed!' : 'Some test cases failed.'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message || "An error occurred during execution",
+            status: 'Error',
+            message: 'An error occurred during code execution.'
+        });
+    }
+});
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}!`);

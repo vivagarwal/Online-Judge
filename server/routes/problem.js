@@ -7,22 +7,34 @@ router.post("/api/problems", async (req, res) => {
     try {
         const { name, description, inputs, outputs, testCases } = req.body;
 
-        // Check that all the data exists
+        // Check that all the data exists and is not empty
         if (!name || !description || !inputs || !outputs || !testCases) {
             return res.status(400).send("Please enter all the information");
         }
 
-        // Check if the problem already exists
+        // Additional check for empty arrays
+        if (inputs.length === 0 || outputs.length === 0 || testCases.length === 0) {
+            return res.status(400).send("Inputs, Outputs, and Test Cases cannot be empty");
+        }
+
+        // Additional check for test cases structure
+        for (const testCase of testCases) {
+            if (!testCase.input || !testCase.expectedOutput) {
+                return res.status(400).send("Each test case must have an input and an expected output");
+            }
+        }
+
+        //check if already that problem is being created or not
         const existingProblem = await Problem.findOne({ name });
-        if (existingProblem) { // Problem name already exists
+        if (existingProblem) { // problem name already exists
             return res.status(400).send("Problem Name Already Exists, Please change the name");
         }
 
         const newProblem = new Problem({ name, description, inputs, outputs, testCases });
         await newProblem.save();
-        res.status(201).json({ message: "You have successfully created the problem!", newProblem });
+        return res.status(201).json({ message: "You have successfully created the problem!", newProblem });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -30,9 +42,9 @@ router.post("/api/problems", async (req, res) => {
 router.get("/api/problems", async (req, res) => {
     try {
         const problems = await Problem.find();
-        res.status(200).json(problems);
+        return res.status(200).json(problems);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -45,7 +57,7 @@ router.get("/api/problems/:id", async (req, res) => {
         }
         res.status(200).json(problem);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -53,23 +65,42 @@ router.get("/api/problems/:id", async (req, res) => {
 router.put("/api/problems/:id", async (req, res) => {
     try {
         const { name, description, inputs, outputs, testCases } = req.body;
-        
-        // Check that all the data exists
+
+        // Validate all fields are present and non-empty
         if (!name || !description || !inputs || !outputs || !testCases) {
             return res.status(400).send("Please enter all the information");
+        }
+
+        // Additional checks for non-empty arrays
+        if (inputs.length === 0 || outputs.length === 0 || testCases.length === 0) {
+            return res.status(400).send("Inputs, Outputs, and Test Cases cannot be empty");
+        }
+
+        // Check if each testCase has required fields
+        for (const testCase of testCases) {
+            if (!testCase.input || !testCase.expectedOutput) {
+                return res.status(400).send("Each test case must have an input and an expected output");
+            }
         }
 
         const updatedProblem = await Problem.findByIdAndUpdate(
             req.params.id,
             { name, description, inputs, outputs, testCases },
-            { new: true }
+            { new: true } // Return the updated document
         );
+
         if (!updatedProblem) {
             return res.status(404).json({ message: "Problem not found" });
         }
-        res.status(200).json({ message: "Problem Updated successfully", updatedProblem });
+
+        // Send success response
+        return res.status(200).json({
+            message: "Problem updated successfully",
+            updatedProblem
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        // Send error response
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -82,7 +113,7 @@ router.delete("/api/problems/:id", async (req, res) => {
         }
         res.status(200).json({ message: "Problem deleted" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
