@@ -11,10 +11,6 @@ const validateEmail = (email) => {
     return emailRegex.test(email);
 };
 
-router.get("/", (req, res) => {
-    res.send("Hello, world!");
-});
-
 //Register
 router.post("/register", async (req, res) => {
     try {

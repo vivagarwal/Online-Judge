@@ -20,6 +20,10 @@ app.use(cookieParser());
 app.use('/', authRoutes);
 app.use('/',problemRoutes);
 
+// Basic route for testing
+app.get('/', (req, res) => {
+    res.json({ message: "Welcome to the CodeArena" });
+});
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

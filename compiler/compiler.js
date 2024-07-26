@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const { generateFile } = require('./generateFile');
-const { executeCpp } = require('./executeCPP');
+const { executeCpp } = require('./executeCpp');
 //const { executeJava } = require('./executeJava');
 //const { executePython } = require('./executePython');
 //const { executeC } = require('./executeC');
