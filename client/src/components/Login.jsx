@@ -8,7 +8,6 @@ import { Lock, Mail } from "lucide-react";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // Reset form values on component mount
@@ -19,10 +18,9 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
 
     if (!(email && password)) {
-      setError("Please enter all the information");
+      alert("Please enter all the information");
       return;
     }
     axios
