@@ -2,9 +2,9 @@ const express = require('express');
 const app = express();
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
-//const { executeJava } = require('./executeJava');
-//const { executePython } = require('./executePython');
-//const { executeC } = require('./executeC');
+const { executeJava } = require('./executeJava');
+const { executePython } = require('./executePython');
+const { executeC } = require('./executeC');
 const cors = require('cors');
 
 // middlewares
@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/run", async (req, res) => {
-    const { language = 'cpp', code, input } = req.body;
+    const { language = 'cpp', code, input = '' } = req.body; // Set default input to an empty string
     if (code === undefined) {
         return res.status(400).json({ success: false, error: "Empty code!" });
     }
