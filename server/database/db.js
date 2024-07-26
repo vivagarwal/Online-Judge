@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const DBConnection = async () => {
 
-    const MONGO_URI = process.env.MONGO_URI;
+    const MONGO_URI = process.env.MONGO_URI ||'mongodb://mongo:27017/your_database_name';
     try {
         await mongoose.connect(MONGO_URI);
         console.log('Database connected successfully');

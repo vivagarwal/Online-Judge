@@ -1,22 +1,71 @@
-// src/components/Navbar.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import './css/Navbar.css'; // Import the CSS file for styling
 
 const Navbar = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('user');
+      navigate('/login');
+    }
+  };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <div className="container-fluid">
-        <Link className="navbar-brand" to="/">Home</Link>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link" to="/register">Register</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">Login</Link>
-            </li>
-          </ul>
-        </div>
+    <nav className="navbar navbar-dark bg-dark">
+      CodeArena
+      <div className="navbar-container">
+        <ul className="navbar-menu">
+          {user ? (
+            user.role === 'admin' ? (
+              <>
+                <li>
+                  <Link to="/problems" className="navbar-link">
+                    CRUD
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/homepageuser" className="navbar-link">
+                    Problems
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="custom-logout-btn">
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/homepageuser" className="navbar-link">
+                    Problems
+                  </Link>
+                </li>
+                <li>
+                  <button onClick={handleLogout} className="custom-logout-btn">
+                    Logout
+                  </button>
+                </li>
+              </>
+            )
+          ) : (
+            <>
+              <li>
+                <Link to="/register" className="navbar-link">
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className="navbar-link">
+                  Login
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
       </div>
     </nav>
   );

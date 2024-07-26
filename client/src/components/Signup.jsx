@@ -2,33 +2,43 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { User, Mail, Lock } from 'lucide-react';
 
 function Signup() {
-    const [name, setName] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
 
     // Reset form values on component mount
     useEffect(() => {
-        setName('');
+        setFirstname('');
+        setLastname('');
         setEmail('');
         setPassword('');
-        setRole('');
     }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8080/register', { name, email, password, role })
+
+        if (!validateEmail(email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+
+        axios.post('http://localhost:8080/register', { firstname, lastname, email, password })
             .then(response => {
                 const result = response.data;
                 console.log(result);
                 if (result.message === "You have successfully registered!") {
-                    if(result.user.role === "admin")
-                        navigate("/problems")
-                    else   
-                        navigate("/homepageuser")
+                    navigate('/login');
                 } else {
                     // Reset form values if registration fails
                     resetForm();
@@ -37,15 +47,25 @@ function Signup() {
             .catch(err => {
                 console.log(err); 
                 // Reset form values on error
+                if (err.response) {
+                    console.error(err.response.data);
+                    setError(err.response.data);
+                } else if (err.request) {
+                    console.error(err.request);
+                    setError('Network Error: Please try again later');
+                } else {
+                    console.error('Error', err.message);
+                    setError('An unexpected error occurred');
+                }
                 resetForm();
             });
     };
 
     const resetForm = () => {
-        setName('');
+        setFirstname('');
+        setLastname('');
         setEmail('');
         setPassword('');
-        setRole('');
     };
 
     return (
@@ -54,20 +74,39 @@ function Signup() {
                 <h2>Register</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="name">
-                            <strong>Name</strong>
+                    <User className="absolute top-3 left-3 text-gray-400" size={20} />
+                        <label htmlFor="firstname">
+                            <strong>First Name</strong>
                         </label>
                         <input
                             type="text"
-                            placeholder="Enter name"
+                            placeholder="Enter first name"
                             autoComplete="off"
-                            name="name"
+                            firstname="firstname"
                             className="form-control rounded-0"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={firstname}
+                            onChange={(e) => setFirstname(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="mb-3">
+                    <User className="absolute top-3 left-3 text-gray-400" size={20} />
+                        <label htmlFor="lastname">
+                            <strong>Last Name</strong>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Enter last name"
+                            autoComplete="off"
+                            lastname="lastname"
+                            className="form-control rounded-0"
+                            value={lastname}
+                            onChange={(e) => setLastname(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                    <Mail className="absolute top-3 left-3 text-gray-400" size={20} />
                         <label htmlFor="email">
                             <strong>Email</strong>
                         </label>
@@ -82,6 +121,7 @@ function Signup() {
                         />
                     </div>
                     <div className="mb-3">
+                    <Lock className="absolute top-3 left-3 text-gray-400" size={20} />
                         <label htmlFor="password">
                             <strong>Password</strong>
                         </label>
@@ -92,19 +132,6 @@ function Signup() {
                             className="form-control rounded-0"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="role">
-                            <strong>Role</strong>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="admin/user"
-                            name="role"
-                            className="form-control rounded-0"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
                         />
                     </div>
                     <button type="submit" className="btn btn-success w-100 rounded-0">
@@ -118,6 +145,8 @@ function Signup() {
             </div>
         </div>
     );
+
+    
 }
 
 export default Signup;

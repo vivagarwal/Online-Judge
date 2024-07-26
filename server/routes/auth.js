@@ -6,20 +6,28 @@ const router = express.Router();
 const dotenv = require("dotenv");
 dotenv.config();
 
-
+const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
 
 router.get("/", (req, res) => {
     res.send("Hello, world!");
 });
 
+//Register
 router.post("/register", async (req, res) => {
     try {
         //get all the data from body
-        const { name, email, password, role} = req.body;
+        const { firstname, lastname, email, password, isAdmin } = req.body;
 
         // check that all the data should exists
-        if (!(name && email && password && role)) {
-            return res.status(400).send("Please enter all the information");
+        if (!(firstname && lastname && email && password)) {
+            return res.status(400).send("Please enter all the details");
+        }
+
+        if (!validateEmail(email)) {
+            return res.status(400).send("Please enter a valid email address");
         }
 
         // check if user already exists
@@ -30,18 +38,20 @@ router.post("/register", async (req, res) => {
 
         // encrypt the password
         const hashedPassword = await bcrypt.hash(password, 10);
+        const role = isAdmin ? 'admin' : 'user';
 
         // save the user in DB
         const user = await User.create({
-            name,
+            firstname,
+            lastname,
             email,
             password: hashedPassword,
-            role,
+            role
         });
 
         // generate a token for user and send it
-        const token = jwt.sign({ id: user._id, email }, process.env.SECRET_KEY, {
-            expiresIn: "2h",
+        const token = jwt.sign({ id: user._id, email, role }, process.env.SECRET_KEY, {
+            expiresIn: "1d",
         });
 
         user.token = token;
@@ -52,9 +62,11 @@ router.post("/register", async (req, res) => {
 
     } catch (error) {
         console.log(error);
+        res.status(500).send("Server Error");
     }
 });
 
+//Login
 router.post("/login", async (req, res) => {
     try {
         //get all the user data
@@ -77,7 +89,7 @@ router.post("/login", async (req, res) => {
             return res.status(401).send("Password is incorrect");
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+        const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.SECRET_KEY, {
             expiresIn: "1d",
         });
         user.token = token;
@@ -94,10 +106,17 @@ router.post("/login", async (req, res) => {
             message: "You have successfully logged in!",
             success: true,
             token,
-            role : user.role
+            user: {
+                id: user._id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+                role: user.role
+            },
         });
     } catch (error) {
         console.log(error.message);
+        res.status(500).send("Server Error");
     }
 });
 

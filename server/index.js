@@ -3,8 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const { DBConnection } = require("./database/db.js");
 const cookieParser = require("cookie-parser");
-const authRoutes = require('./routes/auth');
-const problemRoutes = require('./routes/problem')
+const authRoutes = require('./routes/auth.js');
+const problemRoutes = require('./routes/problem.js')
 
 dotenv.config();
 
