@@ -135,7 +135,7 @@ const ProblemDetails = () => {
 
       {/* Compiler (Right Side) */}
       <div className="split-right p-6">
-        <h1 className="text-black font-bold mb-4">Online Code Compiler</h1>
+        <h3 className="text-white font-bold mb-4">Online Code Compiler</h3>
         <div className="border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500">
           <select
             value={language}
@@ -163,6 +163,7 @@ const ProblemDetails = () => {
         >
           <Editor
             value={code}
+            placeholder="Write your code here"
             onValueChange={(code) => setCode(code)}
             highlight={(code) =>
               highlight(code, languages[language] || languages.clike)
@@ -180,10 +181,10 @@ const ProblemDetails = () => {
 
         {/* Input textarea */}
         <div
-          className="bg-gray-900 text-black shadow-md p-2 rounded-md"
+          className="bg-gray-900 text-white shadow-md p-2 rounded-md"
           style={{ overflowY: "auto", overflowX: "auto" }}
         >
-          <h2 className="text-lg font-semibold mb-2">Input</h2>
+          <h3 className="text-lg font-semibold mb-2">Custom Input</h3>
           <textarea
             rows="3"
             cols="60"
@@ -203,17 +204,17 @@ const ProblemDetails = () => {
         </button>
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded"
+          className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded"
           disabled={submitting}
         >
           {submitting ? "Submitting..." : "Submit"}
         </button>
 
         <div
-          className="bg-gray-900 text-black shadow-md p-2 rounded-md"
+          className="bg-gray-900 text-white shadow-md p-2 rounded-md"
           style={{ overflowY: "auto", overflowX: "auto" }}
         >
-          <h2 className="text-lg font-semibold mb-2">Output</h2>
+          <h3 className="text-lg font-semibold mb-2">Output</h3>
           <textarea
             rows="3"
             cols="60"
@@ -223,8 +224,8 @@ const ProblemDetails = () => {
         </div>
 
         {submissionResult && (
-          <div className="bg-gray-900 text-black shadow-md p-2 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Result</h2>
+          <div className="bg-gray-900 text-white shadow-md p-2 rounded-md">
+            <h3 className="text-lg font-semibold mb-2">Result</h3>
             <div
               className={`p-1 rounded ${
                 submissionResult.status === "Success"

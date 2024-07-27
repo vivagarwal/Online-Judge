@@ -13,8 +13,8 @@
   
   .split-right {
     flex: 1;
-    background-color: #33afb1;
-    color: white;
+    background-color: black;
+    color: black;
     overflow: auto;
   }
   
