@@ -24,7 +24,6 @@ const ProblemDetails = () => {
   const editorRef = useRef(null);
   const [submissionResult, setSubmissionResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  
 
   useEffect(() => {
     // Disable spell-checking for the entire component
@@ -85,26 +84,30 @@ const ProblemDetails = () => {
 
   const handleSubmit = async () => {
     if (!id) {
-      setOutput('Error: Problem ID is missing.');
+      setOutput("Error: Problem ID is missing.");
       return;
     }
     setSubmitting(true);
     try {
-      const compilerResponse = await axios.post('http://localhost:5001/submit', {
-        problemId: id,
-        code,
-        language,
-        testCases: problem.testCases
-      });
+      const compilerResponse = await axios.post(
+        "http://localhost:5001/submit",
+        {
+          problemId: id,
+          code,
+          language,
+          testCases: problem.testCases,
+        }
+      );
+      console.log(compilerResponse.data); // Log the response to check its structure
       setSubmissionResult({
         status: compilerResponse.data.status,
-        message: compilerResponse.data.message
+        message: compilerResponse.data.message,
       });
     } catch (error) {
-      console.error('Error submitting code:', error);
+      console.error("Error submitting code:", error);
       setSubmissionResult({
-        status: 'Runtime Error',
-        message: 'An unexpected error occurred during submission.'
+        status: "Runtime Error",
+        message: "An unexpected error occurred during submission.",
       });
     } finally {
       setSubmitting(false);
@@ -127,12 +130,12 @@ const ProblemDetails = () => {
     <div className="split-container h-screen bg-gray-100">
       {/* Problem View (Left Side) */}
       <div className="split-left p-6">
-        <ProblemView problem={problem} />
+        <ProblemView/>
       </div>
 
       {/* Compiler (Right Side) */}
       <div className="split-right p-6">
-        <h1 className="text-3xl font-bold mb-4">Online Code Compiler</h1>
+        <h1 className="text-black font-bold mb-4">Online Code Compiler</h1>
         <div className="border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500">
           <select
             value={language}
@@ -177,7 +180,7 @@ const ProblemDetails = () => {
 
         {/* Input textarea */}
         <div
-          className="bg-gray-900 text-white shadow-md p-2 rounded-md"
+          className="bg-gray-900 text-black shadow-md p-2 rounded-md"
           style={{ overflowY: "auto", overflowX: "auto" }}
         >
           <h2 className="text-lg font-semibold mb-2">Input</h2>
@@ -198,46 +201,48 @@ const ProblemDetails = () => {
         >
           Run
         </button>
-        <button 
-            onClick={handleSubmit}
-            className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded"
-            disabled={submitting}
-          >
-            {submitting ? 'Submitting...' : 'Submit'}
-          </button>
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded"
+          disabled={submitting}
+        >
+          {submitting ? "Submitting..." : "Submit"}
+        </button>
 
         <div
-          className="bg-gray-900 text-black shadow-md p-4 rounded-md mb-4"
-          style={{ height: "100px", overflowY: "auto" }}
+          className="bg-gray-900 text-black shadow-md p-2 rounded-md"
+          style={{ overflowY: "auto", overflowX: "auto" }}
         >
           <h2 className="text-lg font-semibold mb-2">Output</h2>
-          <div
-            style={{
-              fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontSize: 12,
-            }}
-          >
-            {output}
-          </div>
+          <textarea
+            rows="3"
+            cols="60"
+            value={output}
+            className="w-full bg-gray-800 text-black border border-gray-700 rounded-md py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500 resize-none"
+          ></textarea>
         </div>
-        
+
         {submissionResult && (
-          <div className="mt-4">
-            <h3 className="bg-gray-900 text-black shadow-md p-4 rounded-md mb-4">Submission Result:</h3>
-            <div className={`p-4 rounded ${
-              submissionResult.status === 'Accepted' ? 'bg-green-700' :
-              submissionResult.status === 'Wrong Answer' ? 'bg-red-700' :
-              submissionResult.status === 'Time Limit Exceeded' ? 'bg-yellow-700' :
-              submissionResult.status === 'Runtime Error' ? 'bg-purple-700' :
-              'bg-gray-700'
-            }`}>
+          <div className="bg-gray-900 text-black shadow-md p-2 rounded-md">
+            <h2 className="text-lg font-semibold mb-2">Result</h2>
+            <div
+              className={`p-1 rounded ${
+                submissionResult.status === "Success"
+                  ? "bg-green-700 text-white"
+                  : submissionResult.status === "Failed"
+                  ? "bg-red-700 text-white"
+                  : submissionResult.status === "Time Limit Exceeded"
+                  ? "bg-yellow-700 text-black"
+                  : submissionResult.status === "Runtime Error"
+                  ? "bg-purple-700 text-white"
+                  : "bg-gray-700 text-black"
+              }`}
+            >
               <p className="font-bold">{submissionResult.status}</p>
-              <p>{submissionResult.message}</p>
+              <p className="text-sm">{submissionResult.message}</p>
             </div>
           </div>
         )}
-
-        
       </div>
     </div>
   );

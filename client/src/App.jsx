@@ -9,6 +9,8 @@ import ProblemList from "./components/ProblemList";
 import ProblemView from "./components/ProblemView";
 import ProblemList1 from "./components/ProblemList1";
 import ProblemDetails from "./components/ProblemDetails";
+import './index.css';
+
 
 const App = () => {
   return (

@@ -1,13 +1,12 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Lock, Mail } from "lucide-react";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
   const navigate = useNavigate();
 
   // Reset form values on component mount
@@ -23,9 +22,12 @@ function Login() {
       alert("Please enter all the information");
       return;
     }
+
+    // Clear previous error message
+    setErrorMessage("");
+
     axios
       .post("http://localhost:8080/login", { email, password })
-
       .then((response) => {
         const result = response.data;
         console.log(result);
@@ -39,10 +41,10 @@ function Login() {
           // Set the default Authorization header for future requests
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
+
         if (result.message === "You have successfully logged in!") {
-          if (result.user.role === "admin")
-            navigate("/problems"); // home page for admin
-          else navigate("/homepageuser"); //home page for users
+          if (result.user.role === "admin") navigate("/problems"); // home page for admin
+          else navigate("/homepageuser"); // home page for users
         } else {
           // Handle other responses if needed
           console.log("Login failed or unexpected response");
@@ -51,6 +53,14 @@ function Login() {
       })
       .catch((error) => {
         console.error("Error:", error);
+
+        // Check if there is a response from the server
+        if (error.response && error.response.data && error.response.data.message) {
+          setErrorMessage(error.response.data.message); // Set the error message
+        } else {
+          setErrorMessage("An unexpected error occurred."); // Default error message
+        }
+
         resetForm();
       });
   };
@@ -64,6 +74,14 @@ function Login() {
     <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
       <div className="bg-white p-3 rounded w-25">
         <h2>Login</h2>
+
+        {/* Display the error message if it exists */}
+        {errorMessage && (
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <Mail className="absolute top-3 left-3 text-gray-400" size={20} />
@@ -98,13 +116,7 @@ function Login() {
             Sign In
           </button>
         </form>
-        <p>Don't have an account?</p>
-        <Link
-          to="/register"
-          className="btn btn-default border w-100 rounded-0 text-decoration-none"
-        >
-          Create Account
-        </Link>
+        <p>Don't have an account? <Link to="/register">Register</Link></p>
       </div>
     </div>
   );

@@ -19,17 +19,17 @@ router.post("/register", async (req, res) => {
 
         // check that all the data should exists
         if (!(firstname && lastname && email && password)) {
-            return res.status(400).send("Please enter all the details");
+            return res.status(400).json({message :"Please enter all the details"});
         }
 
         if (!validateEmail(email)) {
-            return res.status(400).send("Please enter a valid email address");
+            return res.status(400).json({message:"Please enter a valid email address"});
         }
 
         // check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(200).send("User already exists!");
+            return res.status(200).json({message :"User already exists!"});
         }
 
         // encrypt the password
@@ -70,19 +70,19 @@ router.post("/login", async (req, res) => {
 
         // check that all the data should exists
         if (!(email && password)) {
-            return res.status(400).send("Please enter all the information");
+            return res.status(400).json({message :"Please enter all the information"});
         }
 
         //find the user in the database
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).send("User not found!");
+            return res.status(401).json({message:"User not found!"});
         }
 
         //match the password
         const enteredPassword = await bcrypt.compare(password, user.password);
         if (!enteredPassword) {
-            return res.status(401).send("Password is incorrect");
+            return res.status(401).json({message:"Password is incorrect"});
         }
 
         const token = jwt.sign({ id: user._id, email: user.email, role: user.role }, process.env.SECRET_KEY, {

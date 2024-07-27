@@ -9,25 +9,25 @@ router.post("/api/problems", async (req, res) => {
 
         // Check that all the data exists and is not empty
         if (!name || !description || !inputs || !outputs || !testCases) {
-            return res.status(400).send("Please enter all the information");
+            return res.status(400).json({message:"Please enter all the information"});
         }
 
         // Additional check for empty arrays
         if (inputs.length === 0 || outputs.length === 0 || testCases.length === 0) {
-            return res.status(400).send("Inputs, Outputs, and Test Cases cannot be empty");
+            return res.status(400).json({message:"Inputs, Outputs, and Test Cases cannot be empty"});
         }
 
         // Additional check for test cases structure
         for (const testCase of testCases) {
             if (!testCase.input || !testCase.expectedOutput) {
-                return res.status(400).send("Each test case must have an input and an expected output");
+                return res.status(400).json({message:"Each test case must have an input and an expected output"});
             }
         }
 
         //check if already that problem is being created or not
         const existingProblem = await Problem.findOne({ name });
         if (existingProblem) { // problem name already exists
-            return res.status(400).send("Problem Name Already Exists, Please change the name");
+            return res.status(400).send({message:"Problem Name Already Exists, Please change the name"});
         }
 
         const newProblem = new Problem({ name, description, inputs, outputs, testCases });
@@ -68,18 +68,18 @@ router.put("/api/problems/:id", async (req, res) => {
 
         // Validate all fields are present and non-empty
         if (!name || !description || !inputs || !outputs || !testCases) {
-            return res.status(400).send("Please enter all the information");
+            return res.status(400).json({message:"Please enter all the information"});
         }
 
         // Additional checks for non-empty arrays
         if (inputs.length === 0 || outputs.length === 0 || testCases.length === 0) {
-            return res.status(400).send("Inputs, Outputs, and Test Cases cannot be empty");
+            return res.status(400).json({message :"Inputs, Outputs, and Test Cases cannot be empty"});
         }
 
         // Check if each testCase has required fields
         for (const testCase of testCases) {
             if (!testCase.input || !testCase.expectedOutput) {
-                return res.status(400).send("Each test case must have an input and an expected output");
+                return res.status(400).json({message:"Each test case must have an input and an expected output"});
             }
         }
 
