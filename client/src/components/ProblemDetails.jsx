@@ -204,9 +204,11 @@ const ProblemDetails = () => {
         </div>
         <div className="mt-4">
           <h3 className="text-xl font-semibold mb-2">Output:</h3>
-          <textarea className="w-full h-1/6 p-4 bg-gray-700 text-white font-mono rounded">
-            {output}
-          </textarea>
+          <textarea
+            value={output} 
+            readOnly // read-only since it's just for displaying output
+            className="w-full h-1/6 p-4 bg-gray-700 text-white font-mono rounded"
+          />
         </div>
         {submissionResult && (
           <div className="mt-4">
