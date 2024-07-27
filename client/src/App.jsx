@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Routes, Route , useLocation , Navigate} from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
@@ -10,7 +9,6 @@ import ProblemView from "./components/ProblemView";
 import ProblemList1 from "./components/ProblemList1";
 import ProblemDetails from "./components/ProblemDetails";
 import './index.css';
-
 
 const App = () => {
   return (

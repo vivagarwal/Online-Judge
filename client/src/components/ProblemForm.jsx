@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import "./css/ProblemForm.css";
 
 const ProblemForm = () => {
   const [name, setName] = useState("");
@@ -72,11 +71,12 @@ const ProblemForm = () => {
           .put(`http://localhost:8080/api/problems/${id}`, problemData)
           .then((response) => {
             const result = response.data;
-            console.log(result);
             if (result.message === "Problem updated successfully") {
+              alert(result.message);
               navigate("/problems");
             } else {
               setError(result.message);
+              resetForm();
             }
           });
       } else {
@@ -84,17 +84,25 @@ const ProblemForm = () => {
           .post("http://localhost:8080/api/problems", problemData)
           .then((response) => {
             const result = response.data;
-            console.log(result);
-            if (result.message === "You have successfully created the problem!") {
+            if (
+              result.message === "You have successfully created the problem!"
+            ) {
+              alert(result.message);
               navigate("/problems");
             } else {
               setError(result.message);
+              resetForm();
             }
           });
       }
     } catch (error) {
       console.error(error);
-      if (error.response && error.response.data && error.response.data.message) {
+      resetForm();
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         setError(error.response.data.message);
       } else if (error.request) {
         setError("Network Error: Please try again later");
@@ -157,131 +165,180 @@ const ProblemForm = () => {
   };
 
   return (
-    <div className="form-container">
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      )}
-      <form onSubmit={handleSubmit} className="form">
-        <div className="form-group">
-          <label>Problem Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="form-control"
-          />
-        </div>
-        <div className="form-group">
-          <label>Problem Description:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            className="form-control"
-          />
-        </div>
-        <div className="form-group">
-          <label>Inputs:</label>
-          <div className="input-group">
+    <div className="min-h-screen w-screen bg-gray-100 flex items-center justify-center py-8 px-4 overflow-hiden">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+        {error && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="form-group">
+            <label className="block text-lg font-medium text-gray-700">
+              Problem Name:
+            </label>
             <input
               type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            <button type="button" onClick={handleAddInput} className="btn">
-              Add Input
-            </button>
           </div>
-          <ul className="list">
-            {inputs.map((input, index) => (
-              <li key={index} className="list-item">
-                {input}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteInput(index)}
-                  className="btn delete-btn"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="form-group">
-          <label>Outputs:</label>
-          <div className="input-group">
-            <input
-              type="text"
-              value={outputValue}
-              onChange={(e) => setOutputValue(e.target.value)}
-              className="form-control"
-            />
-            <button type="button" onClick={handleAddOutput} className="btn">
-              Add Output
-            </button>
-          </div>
-          <ul className="list">
-            {outputs.map((output, index) => (
-              <li key={index} className="list-item">
-                {output}
-                <button
-                  type="button"
-                  onClick={() => handleDeleteOutput(index)}
-                  className="btn delete-btn"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="form-group">
-          <label>Test Cases:</label>
-          <div className="input-group">
+          <div className="form-group">
+            <label className="block text-lg font-medium text-gray-700">
+              Problem Description:
+            </label>
             <textarea
-              type="text"
-              placeholder="Test Case Input"
-              value={testCaseInput}
-              onChange={(e) => setTestCaseInput(e.target.value)}
-              className="form-control"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
-            <textarea
-              type="text"
-              placeholder="Expected Output"
-              value={testCaseOutput}
-              onChange={(e) => setTestCaseOutput(e.target.value)}
-              className="form-control"
-            />
-            <button type="button" onClick={handleAddTestCase} className="btn">
-              Add Test Case
-            </button>
           </div>
-          <ul className="list">
-            {testCases.map((testCase, index) => (
-              <li key={index} className="list-item">
-                <strong>Input:</strong> {testCase.input} -{" "}
-                <strong>Expected Output:</strong> {testCase.expectedOutput}
+          <div className="form-group">
+            <label className="block text-lg font-medium text-gray-700">
+              Inputs:
+            </label>
+            <div className="flex items-center space-x-4">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <button
+                type="button"
+                onClick={handleAddInput}
+                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+              >
+                Add Input
+              </button>
+            </div>
+            <ul className="mt-4 space-y-2">
+              {inputs.map((input, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded shadow-sm"
+                >
+                  {input}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteInput(index)}
+                    className="bg-red-600 text-white py-1 px-2 rounded hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="form-group">
+            <label className="block text-lg font-medium text-gray-700">
+              Outputs:
+            </label>
+            <div className="flex items-center space-x-4">
+              <input
+                type="text"
+                value={outputValue}
+                onChange={(e) => setOutputValue(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+              <button
+                type="button"
+                onClick={handleAddOutput}
+                className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+              >
+                Add Output
+              </button>
+            </div>
+            <ul className="mt-4 space-y-2">
+              {outputs.map((output, index) => (
+                <li
+                  key={index}
+                  className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded shadow-sm"
+                >
+                  {output}
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteOutput(index)}
+                    className="bg-red-600 text-white py-1 px-2 rounded hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="form-group">
+            <label className="block text-lg font-medium text-gray-700">
+              Test Cases:
+            </label>
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center space-x-4">
+                <textarea
+                  type="text"
+                  placeholder="Test Case Input"
+                  value={testCaseInput}
+                  onChange={(e) => setTestCaseInput(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+                <textarea
+                  type="text"
+                  placeholder="Expected Output"
+                  value={testCaseOutput}
+                  onChange={(e) => setTestCaseOutput(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
                 <button
                   type="button"
-                  onClick={() => handleDeleteTestCase(index)}
-                  className="btn delete-btn"
+                  onClick={handleAddTestCase}
+                  className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition"
                 >
-                  Delete
+                  Add Test Case
                 </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </div>
+              <ul className="space-y-2">
+                {testCases.map((testCase, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded shadow-sm"
+                  >
+                    <div>
+                      <strong>Input:</strong> {testCase.input} -{" "}
+                      <strong>Expected Output:</strong>{" "}
+                      {testCase.expectedOutput}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteTestCase(index)}
+                      className="bg-red-600 text-white py-1 px-2 rounded hover:bg-red-700 transition"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-        <button type="submit" className="btn submit-btn">
-          Submit
-        </button>
-      </form>
+          <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400 transition"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

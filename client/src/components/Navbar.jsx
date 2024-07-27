@@ -1,71 +1,82 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './css/Navbar.css'; // Import the CSS file for styling
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('user');
-      navigate('/login');
+    if (window.confirm("Are you sure you want to logout")) {
+      localStorage.removeItem("user");
+      navigate("/login");
     }
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
-      CodeArena
-      <div className="navbar-container">
-        <ul className="navbar-menu">
-          {user ? (
-            user.role === 'admin' ? (
-              <>
-                <li>
-                  <Link to="/problems" className="navbar-link">
-                    CRUD
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/homepageuser" className="navbar-link">
-                    Problems
-                  </Link>
-                </li>
-                <li>
-                  <button onClick={handleLogout} className="custom-logout-btn">
-                    Logout
-                  </button>
-                </li>
-              </>
+    <nav className="bg-gray-800 p-4">
+      <div className="container mx-auto">
+        <div className="flex justify-between items-center">
+          <div className="text-white font-bold text-xl">CodeBash</div>
+          <ul className="flex space-x-4">
+            {user ? (
+              user.role === "admin" ? (
+                <>
+                  <li>
+                    <Link
+                      className="text-white hover:text-gray-300"
+                      to="/problems"
+                    >
+                      Problems
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="text-white hover:text-gray-300 bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      className="text-white hover:text-gray-300"
+                      to="/homepageuser"
+                    >
+                      Problems
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="text-white hover:text-gray-300 bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )
             ) : (
               <>
                 <li>
-                  <Link to="/homepageuser" className="navbar-link">
-                    Problems
+                  <Link className="text-white hover:text-gray-300" to="/login">
+                    Login
                   </Link>
                 </li>
                 <li>
-                  <button onClick={handleLogout} className="custom-logout-btn">
-                    Logout
-                  </button>
+                  <Link
+                    className="text-white hover:text-gray-300"
+                    to="/register"
+                  >
+                    Register
+                  </Link>
                 </li>
               </>
-            )
-          ) : (
-            <>
-              <li>
-                <Link to="/register" className="navbar-link">
-                  Register
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="navbar-link">
-                  Login
-                </Link>
-              </li>
-            </>
-          )}
-        </ul>
+            )}
+          </ul>
+        </div>
       </div>
     </nav>
   );

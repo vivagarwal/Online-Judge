@@ -43,7 +43,8 @@ function Login() {
         }
 
         if (result.message === "You have successfully logged in!") {
-          if (result.user.role === "admin") navigate("/problems"); // home page for admin
+          if (result.user.role === "admin")
+            navigate("/problems"); // home page for admin
           else navigate("/homepageuser"); // home page for users
         } else {
           // Handle other responses if needed
@@ -55,7 +56,11 @@ function Login() {
         console.error("Error:", error);
 
         // Check if there is a response from the server
-        if (error.response && error.response.data && error.response.data.message) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
           setErrorMessage(error.response.data.message); // Set the error message
         } else {
           setErrorMessage("An unexpected error occurred."); // Default error message
@@ -71,52 +76,76 @@ function Login() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
-      <div className="bg-white p-3 rounded w-25">
-        <h2>Login</h2>
+    <div className="flex items-center justify-center bg-gradient-to-r from-red-500 to-indigo-600 min-h-screen w-screen overflow-hidden">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md mx-2">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Login
+        </h2>
 
         {/* Display the error message if it exists */}
         {errorMessage && (
-          <div className="alert alert-danger" role="alert">
+          <div
+            className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
+            role="alert"
+          >
             {errorMessage}
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <Mail className="absolute top-3 left-3 text-gray-400" size={20} />
-            <label htmlFor="email">
-              <strong>Email</strong>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="relative mb-4">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
             </label>
+            <Mail className="absolute top-10 left-3 text-gray-400" size={20} />
             <input
               type="email"
+              id="email"
               placeholder="Enter email"
               autoComplete="off"
               name="email"
-              className="form-control rounded-0"
+              className="w-full pl-10 pr-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="mb-3">
-            <Lock className="absolute top-3 left-3 text-gray-400" size={20} />
-            <label htmlFor="password">
-              <strong>Password</strong>
+          <div className="relative mb-4">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
             </label>
+            <Lock className="absolute top-10 left-3 text-gray-400" size={20} />
             <input
               type="password"
+              id="password"
               placeholder="Enter password"
               name="password"
-              className="form-control rounded-0"
+              className="w-full pl-10 pr-4 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="btn btn-success w-100 rounded-0">
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
             Sign In
           </button>
         </form>
-        <p>Don't have an account? <Link to="/register">Register</Link></p>
+        <p className="mt-4 text-center text-gray-600">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="text-blue-500 hover:text-blue-700 font-semibold"
+          >
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

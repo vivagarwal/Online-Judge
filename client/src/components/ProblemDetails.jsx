@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ProblemView from "./ProblemView"; // Import the ProblemView component
-import "./css/SplitView.css"; // Import the CSS file for split view
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs";
 import "prismjs/components/prism-clike";
@@ -22,7 +21,7 @@ const ProblemDetails = () => {
   const [error, setError] = useState(null);
   const [input, setInput] = useState("");
   const editorRef = useRef(null);
-  const [submissionResult, setSubmissionResult] = useState(null);
+  const [submissionResult, setSubmissionResult] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -127,38 +126,30 @@ const ProblemDetails = () => {
   }
 
   return (
-    <div className="split-container h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 w-screen">
       {/* Problem View (Left Side) */}
-      <div className="split-left p-6">
-        <ProblemView/>
+      <div className="w-1/2 p-6 overflow-y-auto">
+        <ProblemView />
       </div>
 
       {/* Compiler (Right Side) */}
-      <div className="split-right p-6">
-        <h3 className="text-white font-bold mb-4">Online Code Compiler</h3>
-        <div className="border-gray-300 rounded-lg py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500">
+      <div className="w-1/2 p-6 bg-gray-800 text-white">
+        <h3 className="text-white font-bold mb-4">Compile Genie</h3>
+        <div className="mb-4">
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="bg-gray-700 text-black py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="bg-gray-700 text-white px-4 py-2 rounded"
           >
-            <option value="cpp" className="text-black">
-              C++
-            </option>
-            <option value="java" className="text-black">
-              Java
-            </option>
-            <option value="py" className="text-black">
-              Python
-            </option>
-            <option value="c" className="text-black">
-              C
-            </option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="py">Python</option>
+            <option value="c">C</option>
           </select>
         </div>
         <div
           className="bg-gray-900 text-white shadow-md w-full mb-4 rounded-md"
-          style={{ height: "40vh", overflowY: "auto", overflowX: "auto" }}
+          style={{ height: "30vh", overflowY: "auto", overflowX: "auto" }}
           ref={editorRef}
         >
           <Editor
@@ -174,69 +165,62 @@ const ProblemDetails = () => {
               fontSize: 14,
               backgroundColor: "#2d2d2d",
               color: "#f8f8f2",
-              minHeight: "40vh",
+              minHeight: "30vh",
             }}
           />
         </div>
 
         {/* Input textarea */}
-        <div
-          className="bg-gray-900 text-white shadow-md p-2 rounded-md"
-          style={{ overflowY: "auto", overflowX: "auto" }}
-        >
-          <h3 className="text-lg font-semibold mb-2">Custom Input</h3>
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold mb-2">Custom Input:</h3>
           <textarea
-            rows="3"
-            cols="60"
             value={input}
-            placeholder="Enter your input"
+            placeholder="Enter your input.."
             onChange={(e) => setInput(e.target.value)}
-            className="w-full bg-gray-800 text-black border border-gray-700 rounded-md py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500 resize-none"
-          ></textarea>
+            className="w-full h-1/6 p-4 bg-gray-700 text-white font-mono rounded"
+            spellCheck="false" // This line disables browser spell-checking
+            autoCorrect="off" // This line disables autocorrect on mobile devices
+            autoCapitalize="off" // This line disables auto-capitalization
+            data-gramm="false" // Disables Grammarly
+            data-gramm_editor="false" // Also disables Grammarly
+            data-enable-grammarly="false" // Disables Grammarly
+          />
         </div>
 
-        {/*Run Button*/}
-        <button
-          onClick={handleRun}
-          className="bg-blue-500 hover:bg-blue-600 text-black font-bold py-2 px-4 rounded"
-        >
-          Run
-        </button>
-        <button
-          onClick={handleSubmit}
-          className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded"
-          disabled={submitting}
-        >
-          {submitting ? "Submitting..." : "Submit"}
-        </button>
-
-        <div
-          className="bg-gray-900 text-white shadow-md p-2 rounded-md"
-          style={{ overflowY: "auto", overflowX: "auto" }}
-        >
-          <h3 className="text-lg font-semibold mb-2">Output</h3>
-          <textarea
-            rows="3"
-            cols="60"
-            value={output}
-            className="w-full bg-gray-800 text-black border border-gray-700 rounded-md py-1.5 px-4 mb-1 focus:outline-none focus:border-indigo-500 resize-none"
-          ></textarea>
+        <div className="mt-4 flex space-x-4">
+          <button
+            onClick={handleRun}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Run Code
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit"}
+          </button>
         </div>
-
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold mb-2">Output:</h3>
+          <textarea className="w-full h-1/6 p-4 bg-gray-700 text-white font-mono rounded">
+            {output}
+          </textarea>
+        </div>
         {submissionResult && (
-          <div className="bg-gray-900 text-white shadow-md p-2 rounded-md">
-            <h3 className="text-lg font-semibold mb-2">Result</h3>
+          <div className="mt-4">
             <div
-              className={`p-1 rounded ${
+              className={`p-4 rounded ${
                 submissionResult.status === "Success"
-                  ? "bg-green-700 text-white"
+                  ? "bg-green-700"
                   : submissionResult.status === "Failed"
-                  ? "bg-red-700 text-white"
+                  ? "bg-red-700"
                   : submissionResult.status === "Time Limit Exceeded"
-                  ? "bg-yellow-700 text-black"
+                  ? "bg-yellow-700"
                   : submissionResult.status === "Runtime Error"
-                  ? "bg-purple-700 text-white"
-                  : "bg-gray-700 text-black"
+                  ? "bg-purple-700"
+                  : "bg-gray-800"
               }`}
             >
               <p className="font-bold">{submissionResult.status}</p>

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "./css/ProblemList.css"; // Import the CSS file
 
 const ProblemList1 = () => {
   const [problems, setProblems] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,7 +24,9 @@ const ProblemList1 = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Loading problems...</div>;
+    return (
+      <div className="text-center py-8 text-gray-400">Loading problems...</div>
+    );
   }
 
   if (error) {
@@ -33,41 +34,64 @@ const ProblemList1 = () => {
   }
 
   return (
-    <div className="problem-list-container">
-      <h1>Problems Set</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {problems.map((problem, index) => (
-            <tr key={problem._id}>
-              <td>{index + 1}</td>
-              <td>
-                <Link to={`/problems/view/${problem._id}`}>{problem.name}</Link>
-              </td>
-              <td>
-                <Link
-                  to={`/problems/submission/${problem._id}`}
-                  className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
-                >
-                  <div className="p-6">
-                    <div className="flex justify-end">
-                      <span className="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
-                        Solve Challenge 
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </td>
+    <div className="min-h-screen w-screen bg-gradient-to-r from-red-500 to-brown-600 flex flex-col items-center py-8 px-4">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Problems Set
+        </h1>
+        {error && (
+          <div
+            className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
+            role="alert"
+          >
+            {error}
+          </div>
+        )}
+
+        <table className="min-w-full bg-white rounded-lg overflow-hidden">
+          <thead>
+            <tr>
+              <th className="w-20 py-3 px-4 bg-black text-white font-semibold text-center">
+                S.No
+              </th>
+              <th className="py-3 px-4 bg-black text-white font-semibold text-left">
+                Name
+              </th>
+              <th className="py-3 px-4 bg-black text-white font-semibold text-center">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {problems.map((problem, index) => (
+              <tr
+                key={problem._id}
+                className={`${
+                  index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                } hover:bg-gray-200`}
+              >
+                <td className="text-center py-3 px-4">{index + 1}</td>
+                <td className="py-3 px-4">
+                  <Link
+                    to={`/problems/view/${problem._id}`}
+                    className="text-blue-500 hover:text-blue-700"
+                  >
+                    {problem.name}
+                  </Link>
+                </td>
+                <td className="text-center py-3 px-4">
+                  <Link
+                    to={`/problems/submission/${problem._id}`}
+                    className="bg-green-600 text-white rounded-lg py-2 px-4 text-sm font-medium hover:bg-green-700 transition-colors duration-300"
+                  >
+                    Solve Challenge
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
