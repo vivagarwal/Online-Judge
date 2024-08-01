@@ -44,7 +44,7 @@ const ProblemDetails = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/problems/${id}`
+          `http://43.204.29.127:8080/api/problems/${id}`
         );
         setProblem(response.data);
         setLoading(false);
@@ -65,7 +65,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/run", {
+      const response = await axios.post("http://43.205.127.107:5001/run", {
         language,
         code,
         input,
@@ -89,7 +89,7 @@ const ProblemDetails = () => {
     setSubmitting(true);
     try {
       const compilerResponse = await axios.post(
-        "http://localhost:5001/submit",
+        "http://43.205.127.107:5001/submit",
         {
           problemId: id,
           code,

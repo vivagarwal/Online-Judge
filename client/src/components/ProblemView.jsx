@@ -8,7 +8,7 @@ const ProblemView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/problems/${id}`)
+      .get(`http://43.204.29.127:8080/api/problems/${id}`)
       .then((response) => setProblem(response.data))
       .catch((error) =>
         console.error("There was an error fetching the problem!", error)

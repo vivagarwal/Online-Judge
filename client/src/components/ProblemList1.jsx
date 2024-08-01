@@ -11,7 +11,7 @@ const ProblemList1 = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/problems");
+        const response = await axios.get("http://43.204.29.127:8080/api/problems");
         setProblems(response.data);
         setLoading(false);
       } catch (err) {

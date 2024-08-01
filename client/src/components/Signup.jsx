@@ -36,7 +36,7 @@ function Signup() {
     }
 
     axios
-      .post("http://localhost:8080/register", {
+      .post("http://43.204.29.127:8080/register", {
         firstname,
         lastname,
         email,

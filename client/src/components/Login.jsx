@@ -27,7 +27,7 @@ function Login() {
     setErrorMessage("");
 
     axios
-      .post("http://localhost:8080/login", { email, password })
+      .post("http://43.204.29.127:8080/login", { email, password })
       .then((response) => {
         const result = response.data;
         console.log(result);

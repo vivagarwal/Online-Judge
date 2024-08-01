@@ -19,7 +19,7 @@ const ProblemForm = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:8080/api/problems/${id}`)
+        .get(`http://43.204.29.127:8080/api/problems/${id}`)
         .then((response) => {
           const { name, description, inputs, outputs, testCases } =
             response.data;
@@ -68,7 +68,7 @@ const ProblemForm = () => {
     try {
       if (id) {
         await axios
-          .put(`http://localhost:8080/api/problems/${id}`, problemData)
+          .put(`http://43.204.29.127:8080/api/problems/${id}`, problemData)
           .then((response) => {
             const result = response.data;
             if (result.message === "Problem updated successfully") {
@@ -81,7 +81,7 @@ const ProblemForm = () => {
           });
       } else {
         await axios
-          .post("http://localhost:8080/api/problems", problemData)
+          .post("http://43.204.29.127:8080/api/problems", problemData)
           .then((response) => {
             const result = response.data;
             if (
