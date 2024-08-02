@@ -12,7 +12,7 @@ const ProblemList = () => {
     setError("");
 
     axios
-      .get("http://localhost:8080/api/problems")
+      .get("https://server.codebash.online/api/problems")
       .then((response) => {
         setProblems(response.data);
       })
@@ -27,7 +27,7 @@ const ProblemList = () => {
     setError("");
     if (window.confirm("Are you sure you want to delete")) {
       axios
-        .delete(`http://localhost:8080/api/problems/${id}`)
+        .delete(`https://server.codebash.online/api/problems/${id}`)
         .then(() => {
           setProblems(problems.filter((problem) => problem._id !== id));
           alert("Problem deleted successfully!"); // Alert on successful deletion

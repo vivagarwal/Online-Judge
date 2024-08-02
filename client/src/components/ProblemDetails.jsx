@@ -44,7 +44,7 @@ const ProblemDetails = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/problems/${id}`
+          `https://server.codebash.online/api/problems/${id}`
         );
         setProblem(response.data);
         setLoading(false);
@@ -65,7 +65,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/run", {
+      const response = await axios.post("https://compiler.codebash.online/run", {
         language,
         code,
         input,
@@ -89,7 +89,7 @@ const ProblemDetails = () => {
     setSubmitting(true);
     try {
       const compilerResponse = await axios.post(
-        "http://localhost:5001/submit",
+        "https://compiler.codebash.online/submit",
         {
           problemId: id,
           code,

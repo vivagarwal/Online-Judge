@@ -8,7 +8,10 @@ const { executeC } = require('./executeC');
 const cors = require('cors');
 
 // middlewares
-app.use(cors());
+app.use(cors({
+    origin: "https://www.codebash.online", // Your frontend URL
+    credentials: true,
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

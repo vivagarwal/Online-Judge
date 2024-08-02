@@ -36,7 +36,7 @@ function Signup() {
     }
 
     axios
-      .post("http://localhost:8080/register", {
+      .post("https://server.codebash.online/register", {
         firstname,
         lastname,
         email,

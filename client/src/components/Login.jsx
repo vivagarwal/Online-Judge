@@ -27,7 +27,7 @@ function Login() {
     setErrorMessage("");
 
     axios
-      .post("http://localhost:8080/login", { email, password })
+      .post("https://server.codebash.online/login", { email, password })
       .then((response) => {
         const result = response.data;
         console.log(result);

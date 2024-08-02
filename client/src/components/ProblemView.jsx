@@ -8,7 +8,7 @@ const ProblemView = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/problems/${id}`)
+      .get(`https://server.codebash.online/api/problems/${id}`)
       .then((response) => setProblem(response.data))
       .catch((error) =>
         console.error("There was an error fetching the problem!", error)
