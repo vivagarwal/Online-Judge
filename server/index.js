@@ -14,7 +14,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
-    origin: "https://www.codebash.online", // Your frontend URL
+    origin: "https://codebash.online", // Your frontend URL
     credentials: true,
 }));
 app.use(express.json());
