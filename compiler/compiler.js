@@ -9,7 +9,7 @@ const cors = require('cors');
 
 // middlewares
 app.use(cors({
-    origin: "https://codebash.online", // Your frontend URL
+    origin:['https://codebash.online', 'https://www.codebash.online'],
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
