@@ -66,7 +66,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post(`${baseUrl}/run`, {
+      const response = await axios.post("http://localhost:5001/run", {
         language,
         code,
         input,
@@ -90,7 +90,7 @@ const ProblemDetails = () => {
     setSubmitting(true);
     try {
       const compilerResponse = await axios.post(
-        `${baseUrl}/submit`,
+        "http://localhost:5001/submit",
         {
           problemId: id,
           code,
