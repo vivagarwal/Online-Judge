@@ -7,11 +7,12 @@ const ProblemList1 = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get("https://server.codebash.online/api/problems");
+        const response = await axios.get(`${baseUrl}/api/problems`);
         setProblems(response.data);
         setLoading(false);
       } catch (err) {

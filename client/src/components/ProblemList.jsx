@@ -6,13 +6,14 @@ const ProblemList = () => {
   const [problems, setProblems] = useState([]);
   const [error, setError] = useState(""); // State to store error message
   const navigate = useNavigate(); // Initialize useNavigate
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   useEffect(() => {
     // Clear any previous errors
     setError("");
 
     axios
-      .get("https://server.codebash.online/api/problems")
+      .get(`${baseUrl}/api/problems`)
       .then((response) => {
         setProblems(response.data);
       })
@@ -27,7 +28,7 @@ const ProblemList = () => {
     setError("");
     if (window.confirm("Are you sure you want to delete")) {
       axios
-        .delete(`https://server.codebash.online/api/problems/${id}`)
+        .delete(`${baseUrl}/api/problems/${id}`)
         .then(() => {
           setProblems(problems.filter((problem) => problem._id !== id));
           alert("Problem deleted successfully!"); // Alert on successful deletion

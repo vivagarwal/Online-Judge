@@ -15,11 +15,12 @@ const ProblemForm = () => {
   const [error, setError] = useState(""); // State to store error message
   const { id } = useParams();
   const navigate = useNavigate();
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   useEffect(() => {
     if (id) {
       axios
-        .get(`https://server.codebash.online/api/problems/${id}`)
+        .get(`${baseUrl}/api/problems/${id}`)
         .then((response) => {
           const { name, description, inputs, outputs, testCases } =
             response.data;
@@ -68,7 +69,7 @@ const ProblemForm = () => {
     try {
       if (id) {
         await axios
-          .put(`https://server.codebash.online/api/problems/${id}`, problemData)
+          .put(`${baseUrl}/api/problems/${id}`, problemData)
           .then((response) => {
             const result = response.data;
             if (result.message === "Problem updated successfully") {
@@ -81,7 +82,7 @@ const ProblemForm = () => {
           });
       } else {
         await axios
-          .post("https://server.codebash.online/api/problems", problemData)
+          .post(`${baseUrl}/api/problems`, problemData)
           .then((response) => {
             const result = response.data;
             if (

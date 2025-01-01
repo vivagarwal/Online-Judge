@@ -5,10 +5,11 @@ import { useParams } from "react-router-dom";
 const ProblemView = () => {
   const { id } = useParams();
   const [problem, setProblem] = useState(null);
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   useEffect(() => {
     axios
-      .get(`https://server.codebash.online/api/problems/${id}`)
+      .get(`${baseUrl}/api/problems/${id}`)
       .then((response) => setProblem(response.data))
       .catch((error) =>
         console.error("There was an error fetching the problem!", error)

@@ -23,6 +23,7 @@ const ProblemDetails = () => {
   const editorRef = useRef(null);
   const [submissionResult, setSubmissionResult] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   useEffect(() => {
     // Disable spell-checking for the entire component
@@ -44,7 +45,7 @@ const ProblemDetails = () => {
 
       try {
         const response = await axios.get(
-          `https://server.codebash.online/api/problems/${id}`
+          `${baseUrl}/api/problems/${id}`
         );
         setProblem(response.data);
         setLoading(false);
@@ -65,7 +66,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post("https://compiler.codebash.online/run", {
+      const response = await axios.post(`${baseUrl}/run`, {
         language,
         code,
         input,
@@ -89,7 +90,7 @@ const ProblemDetails = () => {
     setSubmitting(true);
     try {
       const compilerResponse = await axios.post(
-        "https://compiler.codebash.online/submit",
+        `${baseUrl}/submit`,
         {
           problemId: id,
           code,

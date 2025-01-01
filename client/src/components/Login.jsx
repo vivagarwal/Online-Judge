@@ -8,6 +8,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // State to store error message
   const navigate = useNavigate();
+  const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
 
   // Reset form values on component mount
   useEffect(() => {
@@ -27,7 +28,7 @@ function Login() {
     setErrorMessage("");
 
     axios
-      .post("https://server.codebash.online/login", { email, password })
+      .post(`${baseUrl}/login`, { email, password })
       .then((response) => {
         const result = response.data;
         console.log(result);
