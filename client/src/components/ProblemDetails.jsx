@@ -24,6 +24,7 @@ const ProblemDetails = () => {
   const [submissionResult, setSubmissionResult] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const baseUrl = import.meta.env.VITE_BASE_URL; // Access base URL from environment variable
+  const baseUrl1 = import.meta.env.VITE_BASE_URL1; // Access base URL from environment variable
 
   useEffect(() => {
     // Disable spell-checking for the entire component
@@ -66,7 +67,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/run", {
+      const response = await axios.post(`${baseUrl1}/run`, {
         language,
         code,
         input,
@@ -90,7 +91,7 @@ const ProblemDetails = () => {
     setSubmitting(true);
     try {
       const compilerResponse = await axios.post(
-        "http://localhost:5001/submit",
+        `${baseUrl1}/submit`,
         {
           problemId: id,
           code,
