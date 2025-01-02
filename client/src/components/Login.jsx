@@ -26,7 +26,7 @@ function Login() {
 
     // Clear previous error message
     setErrorMessage("");
-
+    console.log(`${baseUrl}`);
     axios
       .post(`${baseUrl}/login`, { email, password })
       .then((response) => {
