@@ -16,7 +16,7 @@ Explore the live application:
 
 ### 🎥 Application Demo
 
-![Application Demo](media/demo_online_judge.gif)
+![Application Demo](media/online_judge_demo.gif)
 
 ---
 
