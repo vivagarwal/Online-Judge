@@ -8,7 +8,7 @@ Welcome to **Online Judge**, a fully-featured platform that enables users to pra
 
 Explore the live application:
 
-🔗 [Online Judge Platform](https://codebash.online/)
+🔗 [https://codebash.online/](https://codebash.online/)
 
 ---
 
