@@ -25,6 +25,7 @@ Explore the live application:
 - **Real-Time Code Evaluation**: Compile and execute code in a sandboxed environment using Docker.
 - **Language Support**: Users can choose their preferred programming language.
 - **Verdict System**: Instant feedback on submissions (e.g., Accepted, Wrong Answer).
+
 ---
 
 ## 🖥️ Code Execution Engine (Sandboxed Compiler)
@@ -49,6 +50,8 @@ This project integrates a **sandboxed code execution environment** to safely run
    cd sandboxed_compiler
    ```
 3. Follow the **[setup guide](sandboxed_compiler/README.md)** inside the submodule to start the sandbox execution engine.
+
+---
 
 ## 🖥️ Technologies Used
 
