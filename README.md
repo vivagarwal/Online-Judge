@@ -49,7 +49,7 @@ This project integrates a **sandboxed code execution environment** to safely run
    ```bash
    cd sandboxed_compiler
    ```
-3. Follow the **[setup guide](sandboxed_compiler/README.md)** inside the submodule to start the sandbox execution engine.
+3. Follow the **[setup guide](https://github.com/vivagarwal/sandbox_code_execution/blob/main/README.md)** inside the submodule to start the sandbox execution engine.
 
 ---
 
